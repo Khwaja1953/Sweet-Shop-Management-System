@@ -10,9 +10,11 @@ connectDB();
 
 // Routes from Routes folder
 const authRoutes = require("./Routes/userRoute");
+const sweetsRoutes = require("./Routes/sweetsRoute");
 
 
 app.use("/api/auth", authRoutes);
+app.use("/api/sweets", sweetsRoutes);
 app.get('/', (req, res) => {
   res.send("Hello from Express!");
 });

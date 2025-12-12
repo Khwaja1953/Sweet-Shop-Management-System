@@ -3,11 +3,17 @@ const Sweet = require('../Models/Sweet');
 // Add new sweet (POST /api/sweets)
 const addSweet = async (req, res) => {
   try {
-    const { name, category, price, description } = req.body;
+    const { name,image, category, price, description, quantity } = req.body;
     if (!name || !category || price == null) {
       return res.status(400).json({ msg: 'name, category and price are required' });
     }
-    const sweet = new Sweet({ name, category, price, description, createdBy: req.user._id });
+    if (quantity != null && Number(quantity) < 0) {
+      return res.status(400).json({ msg: 'quantity must be >= 0' });
+    }
+    // Check unique name
+    const existing = await Sweet.findOne({ name });
+    if (existing) return res.status(400).json({ msg: 'Sweet name already exists' });
+    const sweet = new Sweet({ name, image, category, price, description, quantity: Number(quantity) || 0, createdBy: req.user._id });
     await sweet.save();
     res.status(201).json({ msg: 'Sweet created', sweet });
   } catch (err) {
@@ -74,4 +80,39 @@ const deleteSweet = async (req, res) => {
   }
 };
 
-module.exports = { addSweet, getSweets, searchSweets, updateSweet, deleteSweet };
+// Purchase sweet (POST /api/sweets/:id/purchase)
+const purchaseSweet = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const qty = Number(req.body.quantity) || 1;
+    if (qty <= 0) return res.status(400).json({ msg: 'quantity must be greater than 0' });
+    const sweet = await Sweet.findById(id);
+    if (!sweet) return res.status(404).json({ msg: 'Sweet not found' });
+    if (sweet.quantity < qty) return res.status(400).json({ msg: 'Insufficient quantity in stock' });
+    sweet.quantity = sweet.quantity - qty;
+    await sweet.save();
+    res.json({ msg: 'Purchase successful', sweet });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Server error' });
+  }
+};
+
+// Restock sweet (POST /api/sweets/:id/restock) Admin only
+const restockSweet = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const qty = Number(req.body.quantity);
+    if (!qty || qty <= 0) return res.status(400).json({ msg: 'quantity must be greater than 0' });
+    const sweet = await Sweet.findById(id);
+    if (!sweet) return res.status(404).json({ msg: 'Sweet not found' });
+    sweet.quantity = sweet.quantity + qty;
+    await sweet.save();
+    res.json({ msg: 'Restock successful', sweet });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Server error' });
+  }
+};
+
+module.exports = { addSweet, getSweets, searchSweets, updateSweet, deleteSweet, purchaseSweet, restockSweet };

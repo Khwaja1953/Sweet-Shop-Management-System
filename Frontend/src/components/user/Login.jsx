@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { postJSON } from '../../utils/api';
+import { postJSON, parseJwt } from '../../utils/api';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -17,12 +17,16 @@ const Login = () => {
             const result = await postJSON('/api/auth/login', { email, password });
             if (result.token) {
                 localStorage.setItem('token', result.token);
-            }
-            if (result.isAdmin){
-                navigate('/dashboard')
-            }
-            else{
+                // store user info if returned
+                if (result.user && result.user.role) {
+                    localStorage.setItem('role', result.user.role);
+                }
+                const payload = parseJwt(result.token);
+                const role = (result.user && result.user.role) || (payload && payload.role) || 'user';
 
+                if (role === 'admin') navigate('/dashboard');
+                else navigate('/');
+            } else {
                 navigate('/');
             }
         } catch (err) {

@@ -7,6 +7,7 @@ const Signup = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [role, setRole] = useState('user');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -15,10 +16,12 @@ const Signup = () => {
         setIsLoading(true);
         setError('');
         try {
-            const result = await postJSON('/api/auth/register', { name, email, password });
+            const result = await postJSON('/api/auth/register', { name, email, password, role });
             if (result.token) {
-                localStorage.setItem('token', result.token);
-            }
+                localStorage.setItem('token', result.token);                // store role if returned
+                if (result.user && result.user.role) {
+                    localStorage.setItem('role', result.user.role);
+                }            }
             navigate('/');
         } catch (err) {
             setError(err.message || 'Signup failed');
@@ -58,6 +61,13 @@ const Signup = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
+                </label>
+                <label>
+                    Role
+                    <select value={role} onChange={(e) => setRole(e.target.value)}>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
                 </label>
                 <button disabled={isLoading} type="submit">
                     {isLoading ? 'Signing up...' : 'Sign up'}

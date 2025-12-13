@@ -12,14 +12,14 @@ const Navbar = () => {
   }
 
   return (
-    <header className="bg-white shadow-sm">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-white shadow-sm">
+      <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="flex items-center gap-4">
-          <NavLink to="/" className={({ isActive }) => `font-semibold text-purple-600 ${isActive ? 'underline' : ''}`}>
+          <NavLink to="/" className={({ isActive }) => `font-semibold text-purple-600 ${isActive ? 'bold' : ''}`}>
             Sweet Shop
           </NavLink>
         </div>
-        <nav className="flex items-center gap-4">
+        <nav className="flex flex-wrap items-center gap-3">
           <NavLink to="/" className={({ isActive }) => `text-gray-700 ${isActive ? 'font-semibold' : ''}`}>
             Home
           </NavLink>

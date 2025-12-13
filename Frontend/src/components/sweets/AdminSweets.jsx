@@ -109,7 +109,7 @@ const AdminSweets = () => {
         </div>
       )}
       {loading ? <div>Loading...</div> : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {sweets.map(s => (
             <div key={s._id} className="border rounded p-3 w-full bg-white shadow-sm">
               {editingId === s._id ? (
@@ -129,8 +129,10 @@ const AdminSweets = () => {
                 <div>
                   <h3 className="text-lg font-medium">{s.name}</h3>
                   <div className="text-sm text-gray-600">Category: {s.category}</div>
-                  <div className="text-sm text-gray-600">Price: ${s.price}</div>
-                  <div className="text-sm text-gray-600">Qty: {s.quantity}</div>
+                  <div className="mt-1 flex items-center justify-between text-sm text-gray-700">
+                    <div className="font-medium">₹{typeof s.price === 'number' ? s.price.toFixed(2) : s.price}</div>
+                    <div className="text-gray-600">Qty: {s.quantity}</div>
+                  </div>
                   <div className="mt-2 flex gap-2">
                     <button className="px-3 py-1 bg-yellow-500 text-white rounded" onClick={() => handleRestock(s)}>Restock</button>
                     <button className="px-3 py-1 bg-red-500 text-white rounded" onClick={() => handleDelete(s)}>Delete</button>

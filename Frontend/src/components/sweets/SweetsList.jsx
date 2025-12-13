@@ -38,18 +38,9 @@ const SweetsList = () => {
     }
   }
 
-  function handleSearch(e) {
-    e.preventDefault();
-    // keep for compatibility if used elsewhere; primary search happens on input change
-    loadSweets(query);
-  }
 
-  function toggleSort() {
-    const next = query.sort === 'price_asc' ? 'price_desc' : 'price_asc';
-    const newQuery = { ...query, sort: next };
-    setQuery(newQuery);
-    loadSweets(newQuery);
-  }
+
+ 
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -86,7 +77,7 @@ const SweetsList = () => {
         sweets.length === 0 ? (
           <div className="text-gray-600">No sweets found.</div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
             {sweets.map(s => (
               <SweetCard key={s._id} sweet={s} onPurchase={handlePurchase} isAdmin={role === 'admin'} />
             ))}

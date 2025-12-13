@@ -8,8 +8,8 @@ router.get('/', getSweets);
 router.get('/search', searchSweets);
 
 // Protected only authenticated users will get access
-router.post('/', protect, addSweet);
-router.put('/:id', protect, updateSweet);
+router.post('/', protect, adminOnly, addSweet);
+router.put('/:id', protect, adminOnly, updateSweet);
 router.post('/:id/purchase', protect, purchaseSweet);
 router.post('/:id/restock', protect, adminOnly, restockSweet);
 router.delete('/:id', protect, adminOnly, deleteSweet);

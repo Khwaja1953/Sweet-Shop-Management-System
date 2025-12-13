@@ -24,7 +24,7 @@ const Login = () => {
                 const payload = parseJwt(result.token);
                 const role = (result.user && result.user.role) || (payload && payload.role) || 'user';
 
-                if (role === 'admin') navigate('/dashboard');
+                if (role === 'admin') navigate('/admin');
                 else navigate('/');
             } else {
                 navigate('/');
@@ -37,34 +37,36 @@ const Login = () => {
     }
 
     return (
-        <div className="auth-form">
-            <h2>Login</h2>
-            {error && <div className="error">{error}</div>}
-            <form onSubmit={handleSubmit}>
-                <label>
+        <div className="max-w-md mx-auto mt-12 bg-white p-6 rounded shadow">
+            <h2 className="text-2xl font-semibold mb-4">Login</h2>
+            {error && <div className="text-red-700 bg-red-100 p-2 rounded mb-2">{error}</div>}
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+                <label className="flex flex-col text-sm text-gray-700">
                     Email
                     <input
+                        className="mt-1 p-2 border rounded"
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
                     />
                 </label>
-                <label>
+                <label className="flex flex-col text-sm text-gray-700">
                     Password
                     <input
+                        className="mt-1 p-2 border rounded"
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
                 </label>
-                <button disabled={isLoading} type="submit">
+                <button disabled={isLoading} type="submit" className="mt-3 bg-purple-600 text-white p-2 rounded">
                     {isLoading ? 'Logging in...' : 'Login'}
                 </button>
             </form>
-            <div className="meta">
-                Don't have an account? <Link to="/signup">Sign up</Link>
+            <div className="text-sm mt-4 text-gray-600">
+                Don't have an account? <Link to="/signup" className="text-purple-600 font-medium">Sign up</Link>
             </div>
         </div>
     );

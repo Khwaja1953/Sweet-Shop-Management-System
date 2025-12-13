@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
 const User = require('../Models/User');
+const JWT_SECRET = process.env.JWT_SECRET || "sweetmanagementshop"
 
+
+//token checking
 const protect = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -9,7 +12,7 @@ const protect = async (req, res, next) => {
 
   const token = authHeader.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(decoded.id).select('-password');
     if (!user) return res.status(401).json({ msg: 'Invalid token' });
     req.user = user;
@@ -20,8 +23,9 @@ const protect = async (req, res, next) => {
   }
 };
 
+
+//check the role of admin only allow admin
 const adminOnly = (req, res, next) => {
-  // Require role === 'admin'
   if (!req.user || req.user.role !== 'admin') {
     return res.status(403).json({ msg: 'Admin access required' });
   }

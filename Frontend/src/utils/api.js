@@ -1,4 +1,4 @@
-export const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
+export const BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
 export async function postJSON(path, data, token) {
   const headers = { 'Content-Type': 'application/json' };
@@ -6,7 +6,7 @@ export async function postJSON(path, data, token) {
   const res = await fetch(`${BASE_URL}${path}`, {
     method: 'POST',
     headers,
-    body: JSON.stringify(data),
+    body: JSON.stringify({...data}),
   });
   const json = await res.json();
   if (!res.ok) throw new Error(json.msg || 'Request failed');
@@ -17,6 +17,28 @@ export async function getJSON(path, token) {
   const headers = {};
   if (token) headers['Authorization'] = `Bearer ${token}`;
   const res = await fetch(`${BASE_URL}${path}`, { headers });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.msg || 'Request failed');
+  return json;
+}
+
+export async function putJSON(path, data, token) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.msg || 'Request failed');
+  return json;
+}
+
+export async function deleteJSON(path, token) {
+  const headers = {};
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  const res = await fetch(`${BASE_URL}${path}`, { method: 'DELETE', headers });
   const json = await res.json();
   if (!res.ok) throw new Error(json.msg || 'Request failed');
   return json;

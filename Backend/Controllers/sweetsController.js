@@ -33,19 +33,24 @@ const getSweets = async (req, res) => {
   }
 };
 
-// Search sweets by name, category, price range (GET /api/sweets/search)
+// Search sweets by name or category (regex), price range, and sort (GET /api/sweets/search)
 const searchSweets = async (req, res) => {
   try {
-    const { name, category, minPrice, maxPrice } = req.query;
+    const { q, minPrice, maxPrice, sort } = req.query;
     const filter = {};
-    if (name) filter.name = new RegExp(name, 'i');
-    if (category) filter.category = category;
+    if (q) {
+      // match either name or category using case-insensitive regex
+      filter.$or = [{ name: new RegExp(q, 'i') }, { category: new RegExp(q, 'i') }];
+    }
     if (minPrice || maxPrice) {
       filter.price = {};
       if (minPrice) filter.price.$gte = Number(minPrice);
       if (maxPrice) filter.price.$lte = Number(maxPrice);
     }
-    const sweets = await Sweet.find(filter);
+    let queryExec = Sweet.find(filter);
+    if (sort === 'price_asc') queryExec = queryExec.sort({ price: 1 });
+    else if (sort === 'price_desc') queryExec = queryExec.sort({ price: -1 });
+    const sweets = await queryExec;
     res.json({ sweets });
   } catch (err) {
     console.error(err);

@@ -1,28 +1,25 @@
 import { useState } from 'react'
-import { Routes , Route, Link } from 'react-router-dom'
-import './App.css'
+import { Routes , Route } from 'react-router-dom'
 import Login from './components/user/Login'
 import Signup from './components/user/Signup'
 import Dashboard from './components/Admin/Dashboard'
+import SweetsList from './components/sweets/SweetsList'
+import AdminSweets from './components/sweets/AdminSweets'
+import Navbar from './components/Other/Navbar'
+
+
 
 function App() {
   const [count, setCount] = useState(0)
-
   return (
     <>
-    <header className="app-header">
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/signup">Sign up</Link>
-      </nav>
-    </header>
-
+    <Navbar />
     <Routes>
       <Route path='/login' element={<Login/>} />
       <Route path='/signup' element={<Signup/>} />
-      <Route path='/' element={<div style={{padding:20}}>Welcome to Sweet Shop</div>} />
+      <Route path='/' element={<SweetsList/>} />
       <Route path='/dashboard' element={<Dashboard/>} />
+      <Route path='/admin' element={<AdminSweets/>} />
     </Routes>
       
     </>

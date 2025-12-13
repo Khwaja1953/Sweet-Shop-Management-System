@@ -3,11 +3,11 @@ const router = express.Router();
 const { protect, adminOnly } = require('../middleware/authMiddleware');
 const { addSweet, getSweets, searchSweets, updateSweet, deleteSweet, purchaseSweet, restockSweet } = require('../Controllers/sweetsController');
 
-// Public
+// Public any one can access
 router.get('/', getSweets);
 router.get('/search', searchSweets);
 
-// Protected
+// Protected only authenticated users will get access
 router.post('/', protect, addSweet);
 router.put('/:id', protect, updateSweet);
 router.post('/:id/purchase', protect, purchaseSweet);

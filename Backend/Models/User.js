@@ -1,3 +1,4 @@
+//user model for both user and admin
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({

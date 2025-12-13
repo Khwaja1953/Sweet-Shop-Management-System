@@ -148,3 +148,6 @@ As part of development I leveraged AI tools to increase productivity and help wi
 
 ---
 
+## Live Link
+You can click this link to check it just create new account to purchase of choose role admin to handle it i have deployed it on render 
+- **Link**: https://sweet-shop-management-system-1-19lc.onrender.com
